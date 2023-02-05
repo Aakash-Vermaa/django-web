@@ -1,0 +1,46 @@
+{% extends 'blog/base.html'%}
+{% block content %}
+
+        <article class="media content-section">
+
+            <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}"/>
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user-post' object.author.username %}">{{ object.author }}</a>
+              <small class="text-muted">{{ object.date_posted |date:"F d, Y" }}</small>
+
+            </div>
+            <h2 class="article-title">{{ object.title }}</h2>
+               {% if object.author == user %}
+              <div>
+              <a class="btn btn-outline-secondary" href="{% url 'post-update' object.id %}">Update</a>
+               <a class="btn btn-outline-danger" href="{% url 'post-delete' object.id %}">Delete</a>
+              </div>
+              {% endif %}
+            <p class="article-content">{{ object.content }}</p>
+              <br/><br/>
+              <hr>
+              <br/>
+              <form action="{% url 'like_post' post.pk %}"
+                    method="POST">
+                  {% csrf_token %}
+              {% if object.author == user %}
+                  {% if liked %}
+                      <button type="submit", name="post_id", value
+                      = "{{ post.id }}", class="btn btn-danger btn-sm">Unlike</button>
+                  {% else %}
+                      <button type="submit", name="post_id", value
+                      = "{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
+                  {% endif %}
+              {% else %}
+                  <small><a href="{% url "login" %}">Login to like</a></small>
+              {% endif%}
+                  - {{ total_likes }} Likes
+              </form>
+
+
+          </div>
+
+
+        </article>
+{% endblock %}
